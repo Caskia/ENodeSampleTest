@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Shouldly" Version="2.8.3" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ENode\ECommon\ECommon.csproj" />
+    <ProjectReference Include="..\..\src\ENode\ENode\ENode.csproj" />
+    <ProjectReference Include="..\..\src\ENode\EQueue\EQueue.csproj" />
+    <ProjectReference Include="..\..\src\Person\Person.CommandHandlers\Person.CommandHandlers.csproj" />
+    <ProjectReference Include="..\..\src\Person\Person.Commands\Person.Commands.csproj" />
+    <ProjectReference Include="..\..\src\Person\Person.Domain\Person.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Person\Person.ReadModel\Person.ReadModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
