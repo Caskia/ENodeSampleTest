@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ENode\ENode\ENode.csproj" />
+    <ProjectReference Include="..\..\src\ENode\EQueue\EQueue.csproj" />
   </ItemGroup>
 
   <ItemGroup>

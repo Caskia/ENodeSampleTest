@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace SendCommand.Tests
 {
@@ -58,47 +59,50 @@ namespace SendCommand.Tests
         private static void Main(string[] args)
         {
             InitializeENodeFramework();
-            var sendAsyncCount = 10000;
+            var sendAsyncCount = 100000;
             var sendSyncount = 1000;
             SendCommandAsync(sendAsyncCount);
-            SendCommandSync(sendSyncount);
+            // SendCommandSync(sendSyncount);
             Console.ReadLine();
         }
 
         private static void SendCommandAsync(int commandCount)
         {
+            ThreadPool.GetAvailableThreads(out int workerThreads, out int completionPortThreads);
+            Console.WriteLine($"workderThreads: {workerThreads}, completionPortThreads: {completionPortThreads}");
+
             var commands = CreateCommands(commandCount);
             var watch = Stopwatch.StartNew();
             var sequence = 0;
             var printSize = commandCount / 10;
             var commandService = ObjectContainer.Resolve<ICommandService>();
-            var waitHandle = new ManualResetEvent(false);
+
             var asyncAction = new Action<ICommand>(async command =>
             {
-                await commandService.SendAsync(command).ConfigureAwait(false);
+                await commandService.SendAsync(command);
                 var current = Interlocked.Increment(ref sequence);
                 if (current % printSize == 0)
                 {
                     Console.WriteLine("----Sent {0} commands async, time spent: {1}ms", current, watch.ElapsedMilliseconds);
                 }
-                if (current == commandCount)
-                {
-                    waitHandle.Set();
-                }
             });
+
+            var preheatingTask = new Task(() =>
+           {
+               commandService.SendAsync(commands.FirstOrDefault()).Wait();
+               Console.WriteLine("complete preheating!");
+           });
+            preheatingTask.Start();
+            preheatingTask.Wait();
 
             var taskList = new List<Task>();
             Console.WriteLine("--Start to send commands asynchronously, total count: {0}.", commandCount);
-            foreach (var command in commands)
+
+            Parallel.ForEach(commands, (command) =>
             {
-                var task = new Task(() =>
-                {
-                    asyncAction(command);
-                });
-                task.Start();
-                taskList.Add(task);
-            }
-            Task.WaitAll(taskList.ToArray());
+                asyncAction(command);
+            });
+
             Console.WriteLine("--Commands send async completed, throughput: {0}/s", commandCount * 1000 / watch.ElapsedMilliseconds);
         }
 

@@ -20,6 +20,14 @@ namespace Person.Tests.Person_Tests
         [Fact(DisplayName = "Should_Create_User_Concurrent_Test")]
         public async Task Should_Create_User_Concurrent_Test()
         {
+            await _commandService.SendAsync(new CreatePerson(11111111111)
+            {
+                Age = ObjectId.GenerateNewStringId(),
+                Name = ObjectId.GenerateNewStringId(),
+                Sex = ObjectId.GenerateNewStringId(),
+                Remark = ObjectId.GenerateNewStringId()
+            });
+
             Parallel.For(0, 100000, async (i) =>
             {
                 var personCommand = new CreatePerson(i)
@@ -33,7 +41,7 @@ namespace Person.Tests.Person_Tests
                 await _commandService.SendAsync(personCommand);
             });
 
-            Thread.Sleep(50000);
+            Thread.Sleep(20000);
 
             var persons = _personRepository.GetAll();
         }

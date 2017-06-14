@@ -7,10 +7,16 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ENode\ENode\ENode.csproj" />
+    <ProjectReference Include="..\..\src\ENode\ECommon\ECommon.csproj" />
+    <ProjectReference Include="..\..\src\ENode\EQueue\EQueue.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
 
   <ItemGroup>

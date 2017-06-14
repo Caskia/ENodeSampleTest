@@ -4,6 +4,10 @@
     <TargetFramework>net46</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Shouldly" Version="2.8.3" />
     <PackageReference Include="xunit" Version="2.2.0" />
